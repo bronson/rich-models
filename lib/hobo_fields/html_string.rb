@@ -1,8 +1,6 @@
 module HoboFields
 
-  class HtmlString < String
-
-    COLUMN_TYPE = :text
+  class HtmlString < HoboFields::Text
 
     def to_html
       self
