@@ -11,9 +11,8 @@ module HoboFields
 
     class Helper; include ActionView::Helpers::SanitizeHelper; end
 
-    def initialize(s)
-      s = Helper.new.sanitize(s, :tags => PERMITTED_TAGS, :attributes => PERMITTED_ATTRIBUTES)
-      super(s)
+    def sanitize(s)
+      Helper.new.sanitize(s, :tags => PERMITTED_TAGS, :attributes => PERMITTED_ATTRIBUTES)
     end
 
   end
