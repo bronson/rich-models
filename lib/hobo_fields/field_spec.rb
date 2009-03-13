@@ -15,6 +15,8 @@ module HoboFields
 
     attr_accessor :model, :name, :type, :position, :options
 
+    TYPE_SYNONYMS = [[:timestamp, :datetime]]
+
     def sql_type
       options[:sql_type] or begin
                               if native_type?(type)
@@ -46,8 +48,19 @@ module HoboFields
       options[:default]
     end
 
+    def same_type?(col_spec)
+      t = sql_type
+      TYPE_SYNONYMS.each do |synonyms|
+        if t.in? synonyms
+          return col_spec.type.in?(synonyms)
+        end
+      end
+      t = col_spec.type
+    end
+
+
     def different_to?(col_spec)
-      sql_type != col_spec.type ||
+      !same_type?(col_spec) ||
         begin
           check_attributes = [:null, :default]
           check_attributes += [:precision, :scale] if sql_type == :decimal
