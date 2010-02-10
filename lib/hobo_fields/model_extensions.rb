@@ -152,7 +152,7 @@ module HoboFields
       # declarations.
       def declare_field(name, type, *args)
         options = args.extract_options!
-        try.field_added(name, type, args, options)
+        field_added(name, type, args, options) if respond_to?(:field_added)
         add_formatting_for_field(name, type, args)
         add_validations_for_field(name, type, args)
         add_index_for_field(name, args, options)
@@ -166,7 +166,7 @@ module HoboFields
       # field declaration
       def add_validations_for_field(name, type, args)
         validates_presence_of   name if args.include?(:required)
-        validates_uniqueness_of name, :allow_nil => !args.include?(:required) if :unique.in?(args)
+        validates_uniqueness_of name, :allow_nil => !args.include?(:required) if args.include?(:unique)
 
         type_class = HoboFields.to_class(type)
         if type_class && type_class.public_method_defined?("validate")

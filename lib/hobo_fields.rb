@@ -50,7 +50,7 @@ module HoboFields
   attr_reader :field_types
 
   def to_class(type)
-    if type.is_one_of?(Symbol, String)
+    if type.is_a?(Symbol) || type.is_a?(String)
       type = type.to_sym
       field_types[type] || standard_class(type)
     else
@@ -130,7 +130,7 @@ module HoboFields
 
         # This is the Hobo hook - add a type wrapper around the field
         # value if we have a special type defined
-        src = if connected? && (type_wrapper = try.attr_type(symbol)) &&
+        src = if connected? && (type_wrapper = (attr_type(symbol) if respond_to?(:attr_type))) &&
                   type_wrapper.is_a?(Class) && !HoboFields::PLAIN_TYPES.values.include?(type_wrapper)
                 "val = begin; #{access_code}; end; wrapper_type = self.class.attr_type(:#{attr_name}); " +
                   "if HoboFields.can_wrap?(wrapper_type, val); wrapper_type.new(val); else; val; end"
@@ -143,7 +143,7 @@ module HoboFields
       end
 
       def define_write_method(attr_name)
-        src = if connected? && (type_wrapper = try.attr_type(attr_name)) &&
+        src = if connected? && (type_wrapper = (attr_type(attr_name) if respond_to?(:attr_type))) &&
                   type_wrapper.is_a?(Class) && !HoboFields::PLAIN_TYPES.values.include?(type_wrapper)
                 "begin; wrapper_type = self.class.attr_type(:#{attr_name}); " +
                   "if !val.is_a?(wrapper_type) && HoboFields.can_wrap?(wrapper_type, val); wrapper_type.new(val); else; val; end; end"
