@@ -81,7 +81,9 @@ module HoboFields
           check_attributes << :limit if sql_type.in?([:string, :text, :binary, :integer])
           check_attributes.any? do |k|
             if k==:default && sql_type==:datetime
-              col_spec.default.try.to_datetime != default.try.to_datetime
+              dt1 = col_spec.default.respond_to?(:to_datetime) ? col_spec.default.to_datetime : nil
+              dt2 = default.respond_to?(:to_datetime) ? default.to_datetime : nil
+              dt1 != dt2
             else
               col_spec.send(k) != self.send(k)
             end

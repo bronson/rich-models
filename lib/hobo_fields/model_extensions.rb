@@ -142,7 +142,7 @@ module HoboFields
       def declare_attr_type(name, type, options={})
         klass = HoboFields.to_class(type)
         attr_types[name] = HoboFields.to_class(type)
-        klass.try.declared(self, name, options)
+        klass.respond_to?(:declared) ? klass.declared(self, name, options) : nil
       end
 
 
