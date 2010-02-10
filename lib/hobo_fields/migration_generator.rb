@@ -240,7 +240,7 @@ module HoboFields
       undo_index_changes = []
       to_change.each do |t|
         model = models_by_table_name[t]
-        table = to_rename.key(t) || model.table_name
+        table = to_rename.index(t) || model.table_name
         if db_tables.include?(table)
           change, undo, index_change, undo_index = change_table(model, table)
           changes << change
