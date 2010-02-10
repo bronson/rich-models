@@ -86,7 +86,7 @@ module HoboFields
     end
 
     def validate
-      "must be one of #{self.class.values.map{|v| v.blank? ? '\'\'' : v} * ', '}" unless self.in?(self.class.values)
+      "must be one of #{self.class.values.map{|v| v.blank? ? '\'\'' : v} * ', '}" unless self.class.values.include?(self)
     end
 
     def to_html(xmldoctype = true)

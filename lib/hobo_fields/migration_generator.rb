@@ -117,7 +117,7 @@ module HoboFields
       all_models = table_model_classes
       hobo_models = all_models.select do |m|
         inc = m.respond_to?(:include_in_migration) ? m.include_in_migration : nil
-        inc && m.name.underscore.not_in?(ignore_model_names)
+        inc && !ignore_model_names.include?(m.name.underscore)
       end
       non_hobo_models = all_models - hobo_models
       db_tables = connection.tables - MigrationGenerator.ignore_tables.map { |t| t.to_s } - non_hobo_models.map { |m| m.table_name }

@@ -84,7 +84,7 @@ module HoboFields
 
 
   def plain_type?(type_name)
-    type_name.in?(PLAIN_TYPES)
+    PLAIN_TYPES.include? type_name
   end
 
 
@@ -131,7 +131,7 @@ module HoboFields
         # This is the Hobo hook - add a type wrapper around the field
         # value if we have a special type defined
         src = if connected? && (type_wrapper = try.attr_type(symbol)) &&
-                  type_wrapper.is_a?(Class) && type_wrapper.not_in?(HoboFields::PLAIN_TYPES.values)
+                  type_wrapper.is_a?(Class) && !HoboFields::PLAIN_TYPES.values.include?(type_wrapper)
                 "val = begin; #{access_code}; end; wrapper_type = self.class.attr_type(:#{attr_name}); " +
                   "if HoboFields.can_wrap?(wrapper_type, val); wrapper_type.new(val); else; val; end"
               else
@@ -144,7 +144,7 @@ module HoboFields
 
       def define_write_method(attr_name)
         src = if connected? && (type_wrapper = try.attr_type(attr_name)) &&
-                  type_wrapper.is_a?(Class) && type_wrapper.not_in?(HoboFields::PLAIN_TYPES.values)
+                  type_wrapper.is_a?(Class) && !HoboFields::PLAIN_TYPES.values.include?(type_wrapper)
                 "begin; wrapper_type = self.class.attr_type(:#{attr_name}); " +
                   "if !val.is_a?(wrapper_type) && HoboFields.can_wrap?(wrapper_type, val); wrapper_type.new(val); else; val; end; end"
               else

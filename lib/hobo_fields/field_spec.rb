@@ -54,7 +54,7 @@ module HoboFields
     end
 
     def null
-      :null.in?(options) ? options[:null] : true
+      options.include?(:null) ? options[:null] : true
     end
 
     def default
@@ -64,8 +64,8 @@ module HoboFields
     def same_type?(col_spec)
       t = sql_type
       TYPE_SYNONYMS.each do |synonyms|
-        if t.in? synonyms
-          return col_spec.type.in?(synonyms)
+        if synonyms.include? t
+          return synonyms.include? col_spec.type
         end
       end
       t == col_spec.type
@@ -78,7 +78,7 @@ module HoboFields
           check_attributes = [:null, :default]
           check_attributes += [:precision, :scale] if sql_type == :decimal && !col_spec.is_a?(SQLITE_COLUMN_CLASS)  # remove when rails fixes https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/2872
           check_attributes -= [:default] if sql_type == :text && col_spec.is_a?(MYSQL_COLUMN_CLASS)
-          check_attributes << :limit if sql_type.in?([:string, :text, :binary, :integer])
+          check_attributes << :limit if [:string, :text, :binary, :integer].include?(sql_type)
           check_attributes.any? do |k|
             if k==:default && sql_type==:datetime
               dt1 = col_spec.default.respond_to?(:to_datetime) ? col_spec.default.to_datetime : nil
@@ -95,7 +95,7 @@ module HoboFields
     private
 
     def native_type?(type)
-      type.in?(native_types.keys - [:primary_key])
+      type != :primary_key && native_types.keys.include?(type)
     end
 
     def native_types

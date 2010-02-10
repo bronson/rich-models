@@ -93,7 +93,7 @@ module HoboFields
             declare_attr_type attr, type, options
             type_wrapper = attr_type(attr)
             define_method "#{attr}=" do |val|
-              if type_wrapper.not_in?(HoboFields::PLAIN_TYPES.values) && !val.is_a?(type) && HoboFields.can_wrap?(type, val)
+              if !HoboFields::PLAIN_TYPES.values.include?(type_wrapper) && !val.is_a?(type) && HoboFields.can_wrap?(type, val)
                 val = type.new(val.to_s)
               end
               instance_variable_set("@#{attr}", val)
@@ -158,15 +158,15 @@ module HoboFields
         add_index_for_field(name, args, options)
         declare_attr_type(name, type, options) unless HoboFields.plain_type?(type)
         field_specs[name] = HoboFields::FieldSpec.new(self, name, type, options)
-        attr_order << name unless name.in?(attr_order)
+        attr_order << name unless attr_order.include?(name)
       end
 
 
       # Add field validations according to arguments in the
       # field declaration
       def add_validations_for_field(name, type, args)
-        validates_presence_of   name if :required.in?(args)
-        validates_uniqueness_of name, :allow_nil => !:required.in?(args) if :unique.in?(args)
+        validates_presence_of   name if args.include?(:required)
+        validates_uniqueness_of name, :allow_nil => !args.include?(:required) if :unique.in?(args)
 
         type_class = HoboFields.to_class(type)
         if type_class && type_class.public_method_defined?("validate")
@@ -180,7 +180,7 @@ module HoboFields
 
       def add_formatting_for_field(name, type, args)
         type_class = HoboFields.to_class(type)
-        if type_class && "format".in?(type_class.instance_methods)
+        if type_class && type_class.instance_methods.include?("format")
           self.before_validation do |record|
             val = record.send(name)
             record.send("#{name}=", val ? val.format : nil)
@@ -192,7 +192,7 @@ module HoboFields
         to_name = options.delete(:index)
         return unless to_name
         index_opts = {}
-        index_opts[:unique] = :unique.in?(args) || options.delete(:unique)
+        index_opts[:unique] = args.include?(:unique) || options.delete(:unique)
         # support :index => true declaration
         index_opts[:name] = to_name unless to_name == true
         index(name, index_opts)
@@ -218,7 +218,7 @@ module HoboFields
         attr_types[name] or
 
           if (refl = reflections[name.to_sym])
-            if refl.macro.in?([:has_one, :belongs_to]) && !refl.options[:polymorphic]
+            if (refl.macro == :has_one || refl.macro == :belongs_to) && !refl.options[:polymorphic]
               refl.klass
             else
               refl
