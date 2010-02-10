@@ -171,7 +171,8 @@ module HoboFields
         type_class = HoboFields.to_class(type)
         if type_class && type_class.public_method_defined?("validate")
           self.validate do |record|
-            v = record.send(name)._?.validate
+            r = record.send(name)
+            v = r ? r.validate : nil
             record.errors.add(name, v) if v.is_a?(String)
           end
         end
@@ -181,7 +182,8 @@ module HoboFields
         type_class = HoboFields.to_class(type)
         if type_class && "format".in?(type_class.instance_methods)
           self.before_validation do |record|
-            record.send("#{name}=", record.send(name)._?.format)
+            val = record.send(name)
+            record.send("#{name}=", val ? val.format : nil)
           end
         end
       end

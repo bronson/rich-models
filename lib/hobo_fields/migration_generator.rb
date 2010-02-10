@@ -153,7 +153,7 @@ module HoboFields
     def extract_column_renames!(to_add, to_remove, table_name)
       if renames
         to_rename = {}
-        column_renames = renames._?[table_name.to_sym]
+        column_renames = renames ? renames[table_name.to_sym] : nil
         if column_renames
           # A hash of table renames has been provided
 
