@@ -284,7 +284,7 @@ module HoboFields
 
       db_columns = model.connection.columns(current_table_name).index_by{|c|c.name}
       key_missing = db_columns[model.primary_key].nil? && model.primary_key
-      db_columns -= [model.primary_key]
+      db_columns.delete(model.primary_key)
 
       model_column_names = model.field_specs.keys.map { |k| k.to_s }
       db_column_names = db_columns.keys.map { |k| k.to_s }
