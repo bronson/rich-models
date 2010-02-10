@@ -27,11 +27,9 @@ We also need to get ActiveRecord set up with a database connection
 Some load path manipulation you shouldn't need:
 
     >> $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '../lib')
-    >> $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '../../hobosupport/lib')
 
 And we'll require:
 
-    >> require 'hobosupport'
     >> require 'hobofields'
     >> HoboFields.enable
 

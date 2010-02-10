@@ -31,13 +31,11 @@ Some load path manipulation you shouldn't need:
 {.hidden}
 
     >> $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '../lib')
-    >> $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '../../hobosupport/lib')
 {.hidden}
 
 And we'll require:
 {.hidden}
 
-    >> require 'hobosupport'
     >> require 'hobofields'
     >> HoboFields.enable
 

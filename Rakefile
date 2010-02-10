@@ -6,8 +6,6 @@ RUBY = File.join(Config::CONFIG['bindir'], Config::CONFIG['ruby_install_name']).
 RUBYDOCTEST = ENV['RUBYDOCTEST'] || "#{RUBY} -S rubydoctest"
 
 $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '/../hobofields/lib')
-$:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '/../hobosupport/lib')
-require 'hobosupport'
 require 'hobofields'
 
 namespace "test" do
@@ -35,7 +33,6 @@ Jeweler::Tasks.new do |gemspec|
   gemspec.authors      = ["Tom Locke"]
   gemspec.rubyforge_project = "hobo"
   gemspec.add_dependency("rails", [">= 2.2.2"])
-  gemspec.add_dependency("hobosupport", ["= #{HoboFields::VERSION}"])
 end
 Jeweler::GemcutterTasks.new
 Jeweler::RubyforgeTasks.new do |rubyforge|

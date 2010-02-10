@@ -1,5 +1,3 @@
-require 'hobosupport'
-
 ActiveSupport::Dependencies.load_paths |= [ File.dirname(__FILE__) ]
 
 module Hobo
