@@ -18,7 +18,7 @@ module HoboFields
     class << self
 
       def with_values(*values)
-        @values = values.*.to_s
+        @values = values.map { |v| v.to_s }
         @translated_values = Hash.new do |hash, value|
           if name.blank? || value.blank?
             hash[value] = value
@@ -48,7 +48,7 @@ module HoboFields
 
       def for(*values)
         options = values.extract_options!
-        values = values.*.to_s
+        values = values.map { |v| v.to_s }
         c = Class.new(EnumString) do
           values.each do |v|
             const_name = v.upcase.gsub(/[^a-z0-9_]/i, '_').gsub(/_+/, '_')

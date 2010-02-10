@@ -113,11 +113,11 @@ module HoboFields
     # Returns an array of model classes and an array of table names
     # that generation needs to take into account
     def models_and_tables
-      ignore_model_names = MigrationGenerator.ignore_models.*.to_s.*.underscore
+      ignore_model_names = MigrationGenerator.ignore_models.map { |m| m.to_s.underscore }
       all_models = table_model_classes
       hobo_models = all_models.select { |m| m.try.include_in_migration && m.name.underscore.not_in?(ignore_model_names) }
       non_hobo_models = all_models - hobo_models
-      db_tables = connection.tables - MigrationGenerator.ignore_tables.*.to_s - non_hobo_models.*.table_name
+      db_tables = connection.tables - MigrationGenerator.ignore_tables.map { |t| t.to_s } - non_hobo_models.map { |m| m.table_name }
       [hobo_models, db_tables]
     end
 
@@ -283,8 +283,8 @@ module HoboFields
       key_missing = db_columns[model.primary_key].nil? && model.primary_key
       db_columns -= [model.primary_key]
 
-      model_column_names = model.field_specs.keys.*.to_s
-      db_column_names = db_columns.keys.*.to_s
+      model_column_names = model.field_specs.keys.map { |k| k.to_s }
+      db_column_names = db_columns.keys.map { |k| k.to_s }
 
       to_add = model_column_names - db_column_names
       to_add += [model.primary_key] if key_missing && model.primary_key

@@ -5,7 +5,7 @@ module HoboFields
     def initialize(model, fields, options={})
       @model = model
       self.table = options.delete(:table_name) || model.table_name
-      self.fields = Array.wrap(fields).*.to_s
+      self.fields = Array.wrap(fields).map { |f| f.to_s }
       self.name = options.delete(:name) || model.connection.index_name(self.table, :column => self.fields)
       self.unique = options.delete(:unique) || false
     end
@@ -25,7 +25,7 @@ module HoboFields
     end
 
     def to_add_statement(new_table_name)
-      r = "add_index :#{new_table_name}, #{fields.*.to_sym.inspect}"
+      r = "add_index :#{new_table_name}, #{fields.map { |f| f.to_sym }.inspect}"
       r += ", :unique => true" if unique
       r += ", :name => '#{name}'" unless default_name?
       r

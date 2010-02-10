@@ -53,7 +53,10 @@ module HoboFields
 
       def index(fields, options = {})
         # don't double-index fields
-        index_specs << HoboFields::IndexSpec.new(self, fields, options) unless index_specs.*.fields.include?(Array.wrap(fields).*.to_s)
+        ffs = Array.wrap(fields).map { |f| f.to_s }
+        unless index_specs.find { |s| s.fields.include?(ffs) }
+          index_specs << HoboFields::IndexSpec.new(self, fields, options)
+        end
       end
 
       # tell the migration generator to ignore the named index. Useful for existing indexes, or for indexes
