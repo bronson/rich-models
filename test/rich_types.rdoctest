@@ -31,7 +31,7 @@ though we don't need it for this test:
 Some load path manipulation you shouldn't need:
 {.hidden}
 
-        >> $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '../../hobofields/lib')
+        >> $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '../lib')
         >> $:.unshift File.join(File.expand_path(File.dirname(__FILE__)), '../../hobosupport/lib')
 {.hidden}
 
