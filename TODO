@@ -1,0 +1,3 @@
+convert to test::unit, get rid of doctest dependency
+get rid of mysql test dependency (can we get rid of db dependency altogether?)
+split rich_types into its own plugin

@@ -1,3 +1,7 @@
+== Rich Models 0.8 ==
+
+    Removed the HoboSupport dependency
+
 == HoboFields 0.7.4 ==
 
     Fix to using the migration generator with STI
